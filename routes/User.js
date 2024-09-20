@@ -1,16 +1,27 @@
 const express = require("express");
 const router = express.Router();
+const Employee = require("../models/EmployeeS");
 
 //import controller
 const {SignUp} = require("../controllers/SignUp");
 const {login} = require("../controllers/login");
 const {Auth,Student,Admin} = require("../Middleware/Auth");
-const { Getemployee } = require("../controllers/employee");
+const { Getemployee, deleteemp } = require("../controllers/employee");
 
 //routes
 router.post("/signup",SignUp);
 router.post("/login", login);
-router.get("/employees",Getemployee)
+router.get("/employees", Getemployee)
+router.delete('/delete/:id', async (req, res) => {
+    const  id  = req.params.id
+    console.log(id);
+    const data = await Employee.deleteOne({ _id: id })
+    res.send({ success: true, message: " deleted", data: data });
+    
+   
+});
+
+
 
 router.get("/test",Auth,(req,res)=>{
     res.status(200).json({
