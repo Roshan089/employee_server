@@ -22,6 +22,17 @@ router.delete('/delete/:id', async (req, res) => {
 });
 
 
+router.post('/employees', async (req, res) => {
+  try {
+    const newEmployee = new Employee(req.body);
+    await newEmployee.save();
+    res.status(201).send(newEmployee);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+
 
 router.get("/test",Auth,(req,res)=>{
     res.status(200).json({
