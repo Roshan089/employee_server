@@ -1,15 +1,8 @@
 const mongoose = require("mongoose");
 
 const employeeSchema = new mongoose.Schema({
- uniqueId: {
-    type: Number,
-    required: true,
-    unique: true
-  },
-  image: {
-    type: String,
-    required: true
-  },
+ 
+ 
   name: {
     type: String,
     required: true
@@ -29,11 +22,11 @@ const employeeSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ['Male', 'Female', 'Other'],
+    
     required: true
   },
   course: {
-    type: String,
+    type: Array,
     required: true
   },
   createDate: {

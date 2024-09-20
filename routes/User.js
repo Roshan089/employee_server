@@ -8,6 +8,7 @@ const {login} = require("../controllers/login");
 const {Auth,Student,Admin} = require("../Middleware/Auth");
 const { Getemployee, deleteemp } = require("../controllers/employee");
 
+
 //routes
 router.post("/signup",SignUp);
 router.post("/login", login);
@@ -29,9 +30,31 @@ router.post('/employees', async (req, res) => {
     res.status(201).send(newEmployee);
   } catch (error) {
     res.status(400).send(error);
+    console.log(error);
+    
   }
 });
 
+
+
+
+router.post('/newemployees', async (req, res) => {
+  try {
+    const data = new Employee(req.body);
+
+    console.log("server i got: ", data);
+
+    await data.save(); 
+console.log("gaya data");
+
+    // Respond with a success message after saving the item
+    res.send("Item saved to database");
+  } catch (error) {
+     console.log(error);
+    // Send an error message with a 400 status if saving fails
+    res.status(400).json({ error: error.message });
+  }
+});
 
 
 router.get("/test",Auth,(req,res)=>{
