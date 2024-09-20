@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
+const { default: mongoose } = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
+
 
 const employeeSchema = new mongoose.Schema({
- 
- 
   name: {
     type: String,
     required: true
@@ -22,11 +22,10 @@ const employeeSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    
     required: true
   },
   course: {
-    type: Array,
+    type: [String],  // Changed to array of strings
     required: true
   },
   createDate: {
@@ -42,8 +41,12 @@ const employeeSchema = new mongoose.Schema({
       type: String,
       default: 'Delete'
     }
+  },
+  uniqueId: {
+    type: String,
+    default: uuidv4,  // Automatically assign a UUID if none is provided
+    unique: true
   }
-
 });
 
-module.exports=mongoose.model('Employee', employeeSchema);
+module.exports = mongoose.model('Employee', employeeSchema);
