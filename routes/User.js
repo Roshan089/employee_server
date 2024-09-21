@@ -1,18 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const Employee = require("../models/EmployeeS");
+const Joi = require('joi');
 
 //import controller
 const {SignUp} = require("../controllers/SignUp");
 const {login} = require("../controllers/login");
-const {Auth,Student,Admin} = require("../Middleware/Auth");
 const { Getemployee, deleteemp } = require("../controllers/employee");
 
 
 //routes
 router.post("/signup",SignUp);
 router.post("/login", login);
-router.get("/employees", Getemployee)
+router.get("/employees", Getemployee);  
 router.delete('/delete/:id', async (req, res) => {
     const  id  = req.params.id
     console.log(id);
@@ -38,31 +38,42 @@ router.post('/employees', async (req, res) => {
 
 
 
+// Validation schema
+const employeeSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  mobileNo: Joi.string().pattern(/^[0-9]{10}$/).required(), // Example for mobile number format
+  designation: Joi.string().required(),
+  gender: Joi.string().valid('M', 'F').required(),
+  course: Joi.array().required()
+});
+
 router.post('/newemployees', async (req, res) => {
   try {
-    const data = new Employee(req.body);
+    // Validate input
+    const { error } = employeeSchema.validate(req.body);
+    if (error) return res.status(400).json({ error: error.details[0].message });
 
-    console.log("server i got: ", data);
+    // Create new employee instance
+    const { name, email, mobileNo, designation, gender, course } = req.body;
+    const data = new Employee({ name, email, mobileNo, designation, gender, course });
 
-    await data.save(); 
-console.log("gaya data");
+    console.log("Server received: ", data);
 
-    // Respond with a success message after saving the item
-    res.send("Item saved to database");
+    // Save to database
+    await data.save();
+
+    console.log("Data saved successfully");
+
+    // Respond with a success message
+    res.status(201).json({ message: "Item saved to database" });
   } catch (error) {
-     console.log(error);
-    // Send an error message with a 400 status if saving fails
-    res.status(400).json({ error: error.message });
+    console.error(error);
+    // Send an error message with a 500 status if saving fails
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-
-router.get("/test",Auth,(req,res)=>{
-    res.status(200).json({
-        success: true,
-        message:"Welcome to the protected route for auth"
-    })
-})
 
 
 

@@ -1,9 +1,9 @@
-//import model
+
 
 const Users = require("../models/Users");
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 
-//import jwt
+
 const jwt = require("jsonwebtoken");
 
 
@@ -12,9 +12,7 @@ require("dotenv").config();
 exports.login = async(req,res) => {
     try{
 
-        //extract name and email
         const {email,password} = req.body;
-        //check if all the data is entered 
         if(!email || !password){
             return res.status(401).json({
                 success:false,
@@ -22,7 +20,6 @@ exports.login = async(req,res) => {
             })
         }
 
-        //check if user exist or not
         let user = await Users.findOne({email});
         if(!user){
             return res.status(401).json({
@@ -39,7 +36,7 @@ exports.login = async(req,res) => {
 
         const secret = process.env.JWT_SECRET;
 
-        if(await bcrypt.compare(password,user.password)){
+        if(await bcryptjs.compare(password,user.password)){
             const token = jwt.sign(
                 payload,
                 secret,

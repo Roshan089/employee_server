@@ -25,7 +25,7 @@ const employeeSchema = new mongoose.Schema({
     required: true
   },
   course: {
-    type: [String],  // Changed to array of strings
+    type: [String], 
     required: true
   },
   createDate: {
@@ -44,7 +44,7 @@ const employeeSchema = new mongoose.Schema({
   },
   uniqueId: {
     type: String,
-    default: uuidv4,  // Automatically assign a UUID if none is provided
+    default: uuidv4, 
     unique: true
   }
 });
