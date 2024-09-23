@@ -53,12 +53,16 @@ router.post('/newemployees', async (req, res) => {
   try {
     // Validate input
     const { error } = employeeSchema.validate(req.body);
+    console.log(req.body);
+    
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     // Create new employee instance
     const { name, email, mobileNo, designation, gender, course } = req.body;
     const data = new Employee({ name, email, mobileNo, designation, gender, course });
 
+
+    
     console.log("Server received: ", data);
 
     // Save to database
@@ -79,19 +83,28 @@ router.put("/update/:id", async (req, res) => {
   try {
     const id = req.params.id;
     console.log(id);
-    const{ name }= req.body
+  
 
-    console.log("name",name);
     
     const empExists = await Employee.findById(id);
     console.log(empExists);
     
     if (!empExists)
       return res.status(401).json({ message: "employee not found" })
-    console.log("body:",req.body);
+    console.log("body:", req.body.courses);
+    
+   
+  empExists.course = req.body.courses; // Manually update the `course` field
+  await empExists.save(); // Save the updated document
+ 
+
+
     
     const updateEmp= await Employee.findByIdAndUpdate(id,req.body,{new:true})
     res.status(200).json(updateEmp);
+    
+
+
     console.log("respons:",updateEmp);
     
   }

@@ -5,7 +5,7 @@ const Employee = require("../models/EmployeeS");
 exports.Getemployee = async (req, res) => {
   try {
     const employees = await Employee.find();
-    console.log(employees);
+    
     
       res.status(200).json(employees);
   } catch (error) {
