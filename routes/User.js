@@ -3,6 +3,7 @@ const router = express.Router();
 const Employee = require("../models/EmployeeS");
 const Joi = require('joi');
 
+
 //import controller
 const {SignUp} = require("../controllers/SignUp");
 const {login} = require("../controllers/login");
@@ -74,7 +75,32 @@ router.post('/newemployees', async (req, res) => {
   }
 });
 
+router.put("/update/:id", async (req, res) => { 
+  try {
+    const id = req.params.id;
+    console.log(id);
+    const{ name }= req.body
 
+    console.log("name",name);
+    
+    const empExists = await Employee.findById(id);
+    console.log(empExists);
+    
+    if (!empExists)
+      return res.status(401).json({ message: "employee not found" })
+    console.log("body:",req.body);
+    
+    const updateEmp= await Employee.findByIdAndUpdate(id,req.body,{new:true})
+    res.status(200).json(updateEmp);
+    console.log("respons:",updateEmp);
+    
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+
+})
 
 
 module.exports = router;
